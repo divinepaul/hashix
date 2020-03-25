@@ -1,0 +1,22 @@
+.frame{
+    -webkit-app-region: drag;
+    height: 2.5vh !important;
+    background-color: #111;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size:16px;
+    width: 100%;
+
+}
+.frame-title{
+    font-size:13px;
+}
+.frame-actions{
+    -webkit-app-region: no-drag;
+}
+.frame-actions-buttons{
+    height: 100%;
+
+}
