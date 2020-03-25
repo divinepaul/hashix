@@ -1,0 +1,52 @@
+{
+  "name": "hashix",
+  "description": "encryption",
+  "private": true,
+  "dependencies": {
+    
+    "cross-env": "7.0.2",
+
+    "electron-is-dev": "1.1.0",
+    "electron-log": "^4.1.0",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "update-electron-app": "^1.5.0"
+  },
+  "devDependencies": {
+    "concurrently": "5.1.0",
+    "electron": "8.2.0",
+    "electron-builder": "^22.4.1",
+    "prettier": "^2.0.2",
+    "react-scripts": "3.4.1",
+    "wait-on": "4.0.1"
+  },
+  "build": {
+    "publish": {
+      "provider": "github"
+    }
+  },
+  "main": "public/electron.js",
+  "homepage": "./",
+  "scripts": {
+    "react-start": "react-scripts start",
+    "react-build": "react-scripts build",
+    "react-test": "react-scripts test --env=jsdom",
+    "react-eject": "react-scripts eject",
+    "electron-build": "electron-builder",
+    "release": "yarn react-build && electron-builder --publish=always",
+    "build": "yarn react-build && yarn electron-build",
+    "start": "concurrently \"cross-env BROWSER=none yarn react-start\" \"wait-on http://localhost:3000 && electron .\""
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
