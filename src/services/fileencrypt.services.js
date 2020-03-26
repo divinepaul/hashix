@@ -1,22 +1,44 @@
 const crypto = require('crypto');
+const fs = require('fs')
+const zlib = require('zlib');
 
-class encryptService {
+class streamEncrypt {
+    
+    checkFiles() {
+        const fileContents = fs.readFileSync('./file.text');
+        if(fileContents) {
+            console.log("File has been sucessfully loaded");
+        } else {
+            console.log("File loading failed");
+        }
+    }
+
     constructor() {
         this.algorithm = 'aes-192-cbc';
         this.password  = 'password';
     }
 
-    createKey() {
+    generateKey() {
         const key = crypto.scryptSync(this.password,'salt',24);
         const buffer = 16;
         const vector = 0;
         const iv = Buffer.alloc(buffer,vector);
         const cipher = crypto.createCipheriv(this.algorithm,key,iv);
-        let encrypted = cipher.update('some clear text data', 'utf8', 'hex');
-        encrypted += cipher.final('hex');
-        console.log(encrypted);
+        this.generateStream(cipher);
+            
     }
+
+    generateStream(cip) {
+
+        const input = fs.createReadStream('file.text');
+        const zip = zlib.createGzip();
+        const output = fs.createWriteStream('file.enc');
+        input.pipe(zip).pipe(cip).pipe(output);
+
+    }
+        
 }
 
-const start = new encryptService();
-start.createKey();
+const stream = new streamEncrypt();
+stream.checkFiles();
+stream.generateKey();
