@@ -3,7 +3,9 @@ const fs = require('fs')
 const zlib = require('zlib');
 
 class streamEncrypt {
-    
+
+
+
     checkFiles() {
         const fileContents = fs.readFileSync('./file.txt');
         if(fileContents) {
@@ -16,6 +18,7 @@ class streamEncrypt {
     constructor() {
         this.algorithm = 'aes-192-cbc';
         this.password  = 'password';
+        this.files = null
     }
 
     generateKey() {
@@ -28,11 +31,8 @@ class streamEncrypt {
             
     }
 
-    setFiles() {
-        const files = [
-            "/service/file.enc",
-            "/service/fileencrypt.services.js"
-        ];
+    setFiles(files) {
+        this.files = files;
         console.log(files);
     }
 
@@ -49,4 +49,7 @@ class streamEncrypt {
 const stream = new streamEncrypt();
 stream.checkFiles();
 stream.generateKey();
-stream.setFiles();
+stream.setFiles([
+    "/service/file.enc",
+    "/service/fileencrypt.services.js"
+]);
