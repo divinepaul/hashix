@@ -1,6 +1,6 @@
-const crypto = require('crypto');
-const fs = require('fs')
-const zlib = require('zlib');
+const crypto = window.require('crypto');
+const fs = window.require('fs')
+const zlib = window.require('zlib');
 
 class streamEncrypt {
     
@@ -39,6 +39,6 @@ class streamEncrypt {
         
 }
 
-const stream = new streamEncrypt();
-stream.checkFiles();
-stream.generateKey();
+// const stream = new streamEncrypt();
+// stream.checkFiles();
+// stream.generateKey();

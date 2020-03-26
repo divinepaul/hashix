@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import "./dashboard.component.css";
+import {FaRegFolderOpen} from "react-icons/fa"
 
 const { dialog } = window.require('electron').remote;
 
@@ -10,12 +12,12 @@ export class DashBoard extends Component {
 
 
         let files = dialog.showOpenDialogSync({
-            properties: ["openFile", "multiSelections"]
+            properties: ["openFile", "multiSelections",'openDirectory']
 
         });
         if (files) {
 
-            this.props.history.push("/files", {
+            this.props.history.push("/configencrypt", {
                 files: files
             }
             )
@@ -25,9 +27,22 @@ export class DashBoard extends Component {
 
     render() {
         return (
-            <button className="file-open-button" onClick={this.openFiles}>
-                <h1>open file</h1>
-            </button>
+            <div className="dashboard">
+                <div className="title-container">
+
+                    <h1>Hashix</h1>
+                    <p>Encrypt your files with military grade encryption</p>
+                </div>
+                <div className="workable-area">
+
+                    <div className="file-open-button" onClick={this.openFiles}>
+                        <FaRegFolderOpen className="file-open-button-icon"/> 
+                        <h1>open file</h1>
+                    </div>
+
+
+                </div>
+            </div>
         );
     }
 }

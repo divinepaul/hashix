@@ -1,7 +1,7 @@
 .frame{
     -webkit-app-region: drag;
-    height: 2.5vh !important;
-    background-color: #111;
+    height: 3.5vh !important;
+    background-color: #2a2a2a;
     color: white;
     display: flex;
     justify-content: space-between;
@@ -10,13 +10,26 @@
     width: 100%;
 
 }
+.icon{
+    margin-left:5px;
+    font-size:10px;
+}
 .frame-title{
     font-size:13px;
 }
 .frame-actions{
     -webkit-app-region: no-drag;
+    height: 100%;   
 }
 .frame-actions-buttons{
     height: 100%;
+    width:30px;
+    background-color:transparent;
+    border: none;
+    color:#eee;
+    font-size:10px;
 
+}
+.frame-actions-buttons:hover{
+    background-color: #0c0c0c;
 }

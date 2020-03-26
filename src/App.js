@@ -9,7 +9,7 @@ import {
 } from "react-router-dom";
 
 import { DashBoard } from './screens/dashboard/dashboard.component';
-import { FileManager } from './screens/file_manager/file_manager.component';
+import { ConfigEncrypt } from './screens/config_encrypt/config_encrypt.component';
 
 class App extends Component {
   render() {
@@ -24,7 +24,7 @@ class App extends Component {
             
 
 
-          <Route path="/files" component={FileManager}/>
+          <Route path="/configencrypt" component={ConfigEncrypt}/>
         
 
         </Switch>
