@@ -1,11 +1,11 @@
-const crypto = window.require('crypto');
-const fs = window.require('fs')
-const zlib = window.require('zlib');
+const crypto = require('crypto');
+const fs = require('fs')
+const zlib = require('zlib');
 
 class streamEncrypt {
     
     checkFiles() {
-        const fileContents = fs.readFileSync('./file.text');
+        const fileContents = fs.readFileSync('./file.txt');
         if(fileContents) {
             console.log("File has been sucessfully loaded");
         } else {
@@ -28,9 +28,17 @@ class streamEncrypt {
             
     }
 
+    setFiles() {
+        const files = [
+            "/service/file.enc",
+            "/service/fileencrypt.services.js"
+        ];
+        console.log(files);
+    }
+
     generateStream(cip) {
 
-        const input = fs.createReadStream('file.text');
+        const input = fs.createReadStream('file.txt');
         const zip = zlib.createGzip();
         const output = fs.createWriteStream('file.enc');
         input.pipe(zip).pipe(cip).pipe(output);
@@ -38,7 +46,7 @@ class streamEncrypt {
     }
         
 }
-
-// const stream = new streamEncrypt();
-// stream.checkFiles();
-// stream.generateKey();
+const stream = new streamEncrypt();
+stream.checkFiles();
+stream.generateKey();
+stream.setFiles();
