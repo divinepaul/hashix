@@ -14,10 +14,11 @@ let mainWindow;
 
 function createWindow() {
   mainWindow = new BrowserWindow({
-    width: 900,
-    height: 680,
+    minWidth: 900,
+    minHeight: 680,
     webPreferences: { nodeIntegration: true },
-    frame: false
+    frame: false,
+    backgroundColor: '#0c0c0c'
   });
 
   mainWindow.loadURL(
