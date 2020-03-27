@@ -38,18 +38,19 @@ class streamEncrypt {
 
     generateStream(cip) {
 
-        const input = fs.createReadStream('file.txt');
+        const input = fs.createReadStream(file.txt);
         const zip = zlib.createGzip();
         const output = fs.createWriteStream('file.enc');
         input.pipe(zip).pipe(cip).pipe(output);
 
     }
+
+
         
 }
 const stream = new streamEncrypt();
 stream.checkFiles();
 stream.generateKey();
 stream.setFiles([
-    "/service/file.enc",
-    "/service/fileencrypt.services.js"
+    "file.txt"
 ]);
