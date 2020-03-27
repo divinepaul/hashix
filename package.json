@@ -3,6 +3,7 @@
   "description": "encryption",
   "private": true,
   "dependencies": {
+    "archiver": "^3.1.1",
     "cross-env": "7.0.2",
     "electron-is-dev": "1.1.0",
     "electron-log": "^4.1.0",

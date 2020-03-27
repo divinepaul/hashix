@@ -1,6 +1,6 @@
 const crypto = require('crypto');
 const fs = require('fs')
-const zlib = require('zlib');
+const archiver = require('archiver');
 
 class cipherEncryption {
 
@@ -8,6 +8,12 @@ class cipherEncryption {
         this.password  = null;
         this.algorithm = null;
         this.files     = null;
+        this.key       = null;
+        this.buffer    = 16;
+        this.vector    = 0;
+        this.input     = null;
+        this.output    = null;
+        this.iv        = null;        
     }
 
     setFiles(files) {
@@ -17,36 +23,62 @@ class cipherEncryption {
     }
 
     setPassword(password) {
-        this.password = password;        
+        this.password = password;       
 
     }
     setAlgorithm(algorithm) {
         this.algorithm = algorithm;
 
     }
+
+    zipFiles() {
+        var output = fs.createWriteStream(__dirname + '/file.zip');
+
+        const archive = archiver('zip', {
+            zlib: {
+                level: 9
+            }
+        });
+        archive.pipe(output);
+        var testFiles = ([
+            "file1.txt",
+            "file2.txt"
+        ])
+        archive.append(fs.createReadStream(testFiles[0]), {
+            name:'file1.txt'
+        });
+        archive.finalize(); 
+    }
     encryptFiles(){
-        const key = crypto.scryptSync(this.password,'salt',24);
-        const buffer = 16;
-        const vector = 0;
-        const iv = Buffer.alloc(buffer,vector);
-        const cipher = crypto.createCipheriv(this.algorithm,key,iv);
-        const input = fs.createReadStream(this.files[0]);
-        const output = fs.createWriteStream('file.enc');
-        input.pipe(cipher).pipe(output);
+        
+        this.key = crypto.scryptSync(this.password,'salt',24);
+        this.iv = Buffer.alloc(this.buffer,this.vector);
+        const cipher = crypto.createCipheriv(this.algorithm,this.key,this.iv);
+        this.input = fs.createReadStream(this.createdZip); //Zipped Files get Encrypted
+        this.output = fs.createWriteStream('file.zip.enc');  //Create Encryped Zip Files
+        this.input.pipe(cipher).pipe(this.output);
 
     }
     decryptFiles(){
+
+        const decipher = crypto.createDecipheriv(this.algorithm,this.key,this.iv)
+        this.input = fs.createReadStream('file.enc');
+        this.output = fs.createWriteStream('decrypt.txt');
+        this.input.pipe(decipher).pipe(this.output);
 
     }
 }
 
 const stream = new cipherEncryption();
 stream.setFiles([
-    "file.txt"
+    "file.zip"
 ])
 stream.setPassword('password');
 stream.setAlgorithm('aes-192-cbc')
-stream.encryptFiles();
+stream.zipFiles();
+//stream.encryptFiles();
+//stream.decryptFiles();
+
 
 
 
