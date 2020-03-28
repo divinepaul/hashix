@@ -2,6 +2,7 @@ const crypto = require('crypto');
 const fs = require('fs')
 const archiver = require('archiver');
 
+
 class cipherEncryption {
 
     constructor() {
@@ -31,8 +32,23 @@ class cipherEncryption {
 
     }
 
+    //Check Whether zip folder is Present
+    checkFolder() {
+
+        const checkDir = 'zipDir/';
+        if(fs.existsSync(checkDir)) {
+            console.log("Folder Exist");
+        } else {
+            fs.mkdir('zipDir/', (err) => {
+                if(err) throw err;
+            })
+        }             
+    }
+
+    //Zip the files 
     zipFiles() {
-        var output = fs.createWriteStream(__dirname + '/file.zip');
+
+        var output = fs.createWriteStream(__dirname + '/zipDir/file.zip');
 
         const archive = archiver('zip', {
             zlib: {
@@ -44,21 +60,31 @@ class cipherEncryption {
             "file1.txt",
             "file2.txt"
         ])
-        archive.append(fs.createReadStream(testFiles[0]), {
-            name:'file1.txt'
-        });
+        
+        var i,j;
+        for(i = 0;i<testFiles.length;i++) {
+            archive.append(fs.createReadStream(testFiles[i]), {
+                name:'file1.txt'
+            });
+        }
         archive.finalize(); 
     }
-    encryptFiles(){
+    encryptFiles() {
         
         this.key = crypto.scryptSync(this.password,'salt',24);
         this.iv = Buffer.alloc(this.buffer,this.vector);
         const cipher = crypto.createCipheriv(this.algorithm,this.key,this.iv);
-        this.input = fs.createReadStream(this.createdZip); //Zipped Files get Encrypted
+        this.input = fs.createReadStream('zipDir/file.zip'); //Zipped Files get Encrypted
         this.output = fs.createWriteStream('file.zip.enc');  //Create Encryped Zip Files
         this.input.pipe(cipher).pipe(this.output);
 
     }
+
+    //Remove the zip file after encryption
+    rmZip() {
+        fs.unlinkSync('zipDir/file.zip');
+    }
+
     decryptFiles(){
 
         const decipher = crypto.createDecipheriv(this.algorithm,this.key,this.iv)
@@ -75,8 +101,10 @@ stream.setFiles([
 ])
 stream.setPassword('password');
 stream.setAlgorithm('aes-192-cbc')
+stream.checkFolder();
 stream.zipFiles();
-//stream.encryptFiles();
+stream.encryptFiles();
+//stream.rmZip();
 //stream.decryptFiles();
 
 
