@@ -3,17 +3,16 @@
   "description": "encryption",
   "private": true,
   "dependencies": {
+    "@material-ui/core": "^4.9.7",
     "archiver": "^3.1.1",
     "cross-env": "7.0.2",
     "electron-is-dev": "1.1.0",
     "electron-log": "^4.1.0",
-    "package.json": "^2.0.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-icons": "^3.9.0",
     "react-router-dom": "^5.1.2",
-    "update-electron-app": "^1.5.0",
-    "yarn": "^1.22.4"
+    "update-electron-app": "^1.5.0"
   },
   "devDependencies": {
     "concurrently": "5.1.0",

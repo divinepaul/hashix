@@ -8,6 +8,8 @@
     align-items: center;
     font-size:16px;
     width: 100%;
+    position: static;
+    top: 0;
 
 }
 .icon{

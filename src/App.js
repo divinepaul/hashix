@@ -10,25 +10,34 @@ import {
 
 import { DashBoard } from './screens/dashboard/dashboard.component';
 import { ConfigEncrypt } from './screens/config_encrypt/config_encrypt.component';
+import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+
+const darkTheme = createMuiTheme({
+  palette: {
+    type: 'dark',
+  },
+});
 
 class App extends Component {
+
   render() {
-    
+
     return (
-     
-      <Router>
-        <Frame /> 
-        <Switch>
+      <ThemeProvider theme={darkTheme}>
+        <Router>
+          <Frame />
+          <Switch>
 
-          <Route path="/" exact component={DashBoard}/>
-            
+            <Route path="/" exact component={DashBoard} />
 
 
-          <Route path="/configencrypt" component={ConfigEncrypt}/>
-        
 
-        </Switch>
-    </Router>
+            <Route path="/configencrypt" component={ConfigEncrypt} />
+
+
+          </Switch>
+        </Router>
+      </ThemeProvider>
     );
   }
 }

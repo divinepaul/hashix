@@ -1,0 +1,12 @@
+
+h2{
+    color:white;
+}
+.config-encrypt-content{
+    padding:5%;
+}
+.files-container{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}

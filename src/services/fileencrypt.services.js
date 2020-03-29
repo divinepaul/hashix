@@ -125,9 +125,7 @@ stream.setPassword('password');
 stream.setAlgorithm('aes-192-cbc')
 stream.checkFolder();
 stream.zipFiles();
-//stream.zipFolder();
 stream.encryptFiles();
-//stream.rmZip();
 //stream.decryptFiles();
 
 

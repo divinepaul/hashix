@@ -1,29 +1,15 @@
 import React, { Component } from 'react';
 import "./dashboard.component.css";
-import {FaRegFolderOpen} from "react-icons/fa"
+import { FaLock,FaUnlock } from "react-icons/fa"
 
-const { dialog } = window.require('electron').remote;
+import Card from '@material-ui/core/Card';
+import {Link} from "react-router-dom";
+
 
 export class DashBoard extends Component {
 
 
-    openFiles = () => {
-
-
-
-        let files = dialog.showOpenDialogSync({
-            properties: ["openFile", "multiSelections",'openDirectory']
-
-        });
-        if (files) {
-
-            this.props.history.push("/configencrypt", {
-                files: files
-            }
-            )
-        }
-    }
-
+   
 
     render() {
         return (
@@ -33,13 +19,23 @@ export class DashBoard extends Component {
                     <h1>Hashix</h1>
                     <p>Encrypt your files with military grade encryption</p>
                 </div>
+
                 <div className="workable-area">
+                    <Link to="/configencrypt">
+                    <Card className="card-button">
 
-                    <div className="file-open-button" onClick={this.openFiles}>
-                        <FaRegFolderOpen className="file-open-button-icon"/> 
-                        <h1>open file</h1>
-                    </div>
+                        <FaLock className="card-button-icon" />
+                        <h1 className="card-button-title">Encrypt</h1>
 
+                    </Card>
+                    </Link>
+
+                    <Card className="card-button">
+
+                        <FaUnlock className="card-button-icon" />
+                        <h1>Decrypt</h1>
+
+                    </Card>
 
                 </div>
             </div>

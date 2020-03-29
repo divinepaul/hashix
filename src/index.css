@@ -3,9 +3,11 @@
   margin: 0;
   padding:0;
 }
-body {
+html,body {
   margin: 0;
   padding: 0;
+  height: auto;
+  min-height: 100%; /* necessary */
   background-color: #0c0c0c;
   font-family: Roboto;
 }

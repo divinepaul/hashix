@@ -7,24 +7,30 @@
 }
 .workable-area{
     margin-top:30px;
-}
-.file-open-button-icon{
-    color:white;
-    font-size:80px;
-}
-.file-open-button{
+    flex-direction: row;
+    
+    justify-content: space-evenly;
     display: flex;
     align-items: center;
-    justify-content:space-evenly;
-    flex-direction: column;
-    color:#8b8b8b;
-    background-color: #1c1c1c;
-    height:130px;
-    width:160px;
-    border-radius:20px;
-    box-shadow: 0 5px 5px 0 rgba(0,0,0, .25);
-    font-size:10px;
+
 }
-.file-open-button:hover{
-    box-shadow: 0 10px 5px 3px rgba(0,0,0, .25);
+a{
+    text-decoration: none !important;
+
+}
+
+.card-button-icon{
+    color:white;
+    font-size:40px;
+}
+.dashboard .MuiPaper-root{
+    max-width:200px;
+    min-width:50px;
+    display: flex;
+    align-items: center;
+    padding:50px;
+    color:#fff !important;
+    flex-direction: column;
+    justify-content: center;
+    background-color: #1c1c1c !important;
 }
