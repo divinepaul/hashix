@@ -1,6 +1,7 @@
 const crypto = require('crypto');
 const fs = require('fs')
 const archiver = require('archiver');
+const path = require('path');
 
 
 class cipherEncryption {
@@ -45,7 +46,7 @@ class cipherEncryption {
         }             
     }
 
-    //Zip the files 
+    //Function To zip the Files 
     zipFiles() {
 
         var output = fs.createWriteStream(__dirname + '/zipDir/file.zip');
@@ -56,19 +57,20 @@ class cipherEncryption {
             }
         });
         archive.pipe(output);
-        var testFiles = ([
-            "file1.txt",
-            "file2.txt"
+        var Files = ([
+            "D:\\file1.txt",
+            "G:\\file3.txt"
         ])
         
         var i,j;
-        for(i = 0;i<testFiles.length;i++) {
-            archive.append(fs.createReadStream(testFiles[i]), {
-                name:'file1.txt'
+        for(i = 0;i<Files.length;i++) {
+            archive.append(fs.createReadStream(Files[i]), {
+                name: path.basename(Files[i])
             });
         }
         archive.finalize(); 
     }
+
     encryptFiles() {
         
         this.key = crypto.scryptSync(this.password,'salt',24);
