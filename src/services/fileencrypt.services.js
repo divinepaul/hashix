@@ -16,6 +16,11 @@ class cipherEncryption {
         this.input     = null;
         this.output    = null;
         this.iv        = null;        
+        this.archive = archiver('zip', {
+            zlib: {
+                level: 9
+            }
+        });
     }
 
     setFiles(files) {
@@ -51,24 +56,39 @@ class cipherEncryption {
 
         var output = fs.createWriteStream(__dirname + '/zipDir/file.zip');
 
-        const archive = archiver('zip', {
-            zlib: {
-                level: 9
-            }
-        });
-        archive.pipe(output);
+        this.archive.pipe(output);
         var Files = ([
-            "D:\\file1.txt",
-            "G:\\file3.txt"
+            "file2.txt",
+            "file2.txt"
         ])
         
-        var i,j;
+        //Adding File Paths into Array
+        var i;
         for(i = 0;i<Files.length;i++) {
-            archive.append(fs.createReadStream(Files[i]), {
+            this.archive.append(fs.createReadStream(Files[i]), {
                 name: path.basename(Files[i])
             });
         }
-        archive.finalize(); 
+        this.archive.finalize(); 
+    }
+
+    //Function To zip the Folder
+    zipFolder() {
+        var output1 = fs.createWriteStream(__dirname + '/zipDir/folder.zip');
+
+        this.archive.pipe(output1);
+        var Folders = ([
+            "subdir/data"
+        ])
+
+        //Adding Folder Paths into Array
+        var j;
+        for(j=0;j<Folders.length;j++)
+        {
+            this.archive.directory(Folders[j]);
+        }
+        this.archive.finalize();
+
     }
 
     encryptFiles() {
@@ -105,6 +125,7 @@ stream.setPassword('password');
 stream.setAlgorithm('aes-192-cbc')
 stream.checkFolder();
 stream.zipFiles();
+//stream.zipFolder();
 stream.encryptFiles();
 //stream.rmZip();
 //stream.decryptFiles();
