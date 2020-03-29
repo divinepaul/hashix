@@ -3,29 +3,61 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import { FaArrowLeft } from "react-icons/fa";
+
 import "./config_encrypt.component.css"
 
 import Button from '@material-ui/core/Button';
-
 import { Card, CardContent, CardActions } from '@material-ui/core';
-
+import TextField from '@material-ui/core/TextField';
 import { TiDelete } from "react-icons/ti";
-const { dialog } = window.require('electron').remote;
+import MenuItem from '@material-ui/core/MenuItem';
 
+const { dialog } = window.require('electron').remote;
+const crypto = window.require("crypto");
 export class ConfigEncrypt extends Component {
 
     constructor(props) {
         super(props)
 
         this.state = {
-
-            files: []
-
+            algorithm: 'aes-256-cbc',
+            files: [],
+            password:''
         }
 
 
     }
 
+    handlePasswordChange =(event)=>{
+        this.setState({password:event.target.value},()=>{
+            console.log(this.state.password);
+        });
+        
+    }
+    handleAlgorithmChange=(event)=>{
+        this.setState({algorithm:event.target.value},()=>{
+            console.log(this.state.algorithm);
+        });
+    }
+
+
+    handleFormSubmit=(event)=>{
+        event.preventDefault();
+        if(!this.state.files.length){
+            dialog.showMessageBoxSync({
+                type:"info",
+                title:"No Files Selected",
+                message:"No Files Selected"
+            },(response)=>{
+                
+            })
+        }else{
+
+            // TODO: actually encrypt files.
+        }
+
+        
+    }
 
     openFiles = () => {
 
@@ -41,10 +73,10 @@ export class ConfigEncrypt extends Component {
 
 
     removeItemFromFiles = (file) => {
-        
+
         let newArr = this.state.files;
-        newArr.splice(file,1)
-        this.setState({files:newArr});
+        newArr.splice(file, 1)
+        this.setState({ files: newArr });
     }
 
 
@@ -101,7 +133,7 @@ export class ConfigEncrypt extends Component {
 
         return (
             <div className="config-encrypt">
-                <AppBar position="relative" color="transparent">
+                <AppBar position="static" color="transparent">
                     <Toolbar>
                         <IconButton edge="start" color="inherit" aria-label="menu" onClick={this.goBack}>
                             <FaArrowLeft color="white" size="20px" />
@@ -141,6 +173,45 @@ export class ConfigEncrypt extends Component {
                                 Open folders
                             </Button>
                         </CardActions>
+                    </Card>
+
+                    <br />
+                    <Card>
+                        <CardContent>
+                            <h1>Configure Encryption</h1>
+                            <br />
+                            <form autoComplete="off" onSubmit={this.handleFormSubmit}>
+
+                                <TextField id="outlined-basic" label="Password" variant="outlined" color="secondary" onChange={this.handlePasswordChange} type="password" required value={this.state.password}/>
+
+                                <br />
+                                <br />
+                                <TextField
+                                
+                                    color="secondary"
+                                    id="outlined-select-currency"
+                                    select
+                                    label="Encryption Algorithm"
+                                    value={this.state.algorithm}
+                                    defaultValue="aes-256-cbc"
+                                    helperText="Please select your algorithm"
+                                    variant="outlined"
+                                    onChange={this.handleAlgorithmChange}
+                                >
+                                    {crypto.getCiphers().map((option, i) => (
+                                        <MenuItem key={i} value={option}>
+                                            {option}
+                                        </MenuItem>
+                                    ))}
+                                </TextField>
+                                <br />
+                                <br />
+                                <Button variant="contained" color="secondary" type="submit">
+                                    Encrypt
+                                </Button>
+
+                            </form>
+                        </CardContent>
                     </Card>
                 </div>
             </div>

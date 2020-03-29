@@ -1,6 +1,6 @@
 .frame{
     -webkit-app-region: drag;
-    height: 3.5vh !important;
+    height: 24px !important;
     background-color: #2a2a2a;
     color: white;
     display: flex;
@@ -8,8 +8,9 @@
     align-items: center;
     font-size:16px;
     width: 100%;
-    position: static;
+    position: fixed;
     top: 0;
+    z-index:18;
 
 }
 .icon{
