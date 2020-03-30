@@ -16,6 +16,8 @@ class cipherEncryption {
         this.input = null;
         this.output = null;
         this.iv = null;
+        this.hash = null;
+        this.salt = null;
 
         this.archive = archiver('zip', {
             zlib: {
@@ -84,11 +86,18 @@ class cipherEncryption {
 
     encryptFiles() {
 
-        this.key = crypto.scryptSync(this.password, 'salt', 24);
-        this.iv = Buffer.alloc(this.buffer, this.vector);
+        this.iv = crypto.randomBytes(16);
+        this.salt = this.password;
+        this.hash = crypto.createHash("sha1");
+
+        this.hash.update(this.salt);
+
+// `hash.digest()` returns a Buffer by default when no encoding is given
+        this.key = this.hash.digest().slice(0, 16);
+
         const cipher = crypto.createCipheriv(this.algorithm, this.key, this.iv);
         this.input = fs.createReadStream('zipDir/file.zip'); //Zipped Files get Encrypted
-        this.output = fs.createWriteStream('file.zip.enc');  //Create Encryped Zip Files
+        this.output = fs.createWriteStream('file.enc');  //Create Encryped Zip Files
         this.input.pipe(cipher).pipe(this.output);
 
     }
@@ -117,8 +126,8 @@ stream.setFiles([
     "file2.txt",
     "./subdir"
 ]);
-stream.setPassword('password');
-stream.setAlgorithm('aes-192-cbc');
+stream.setPassword('paulprince');
+stream.setAlgorithm('aes-128-cbc');
 
 stream.checkFolder();
 stream.zipFiles();
