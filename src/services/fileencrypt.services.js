@@ -88,12 +88,12 @@ class cipherEncryption {
 
         this.iv = crypto.randomBytes(16);
         this.salt = this.password;
-        this.hash = crypto.createHash("sha1");
+        this.hash = crypto.createHash("sha256");
 
         this.hash.update(this.salt);
 
 // `hash.digest()` returns a Buffer by default when no encoding is given
-        this.key = this.hash.digest().slice(0, 16);
+        this.key = this.hash.digest().slice(0, 32);
 
         const cipher = crypto.createCipheriv(this.algorithm, this.key, this.iv);
         this.input = fs.createReadStream('zipDir/file.zip'); //Zipped Files get Encrypted
@@ -123,11 +123,11 @@ const stream = new cipherEncryption();
 // sets file paths using the method.
 stream.setFiles([
     "file2.txt",
-    "file2.txt",
+    "file3.txt",
     "./subdir"
 ]);
 stream.setPassword('paulprince');
-stream.setAlgorithm('aes-128-cbc');
+stream.setAlgorithm('aes-256-cbc');
 
 stream.checkFolder();
 stream.zipFiles();
