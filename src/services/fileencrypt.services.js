@@ -1,10 +1,10 @@
-const crypto = require('crypto');
-const fs = require('fs')
-const archiver = require('archiver');
-const path = require('path');
+const crypto = window.require('crypto');
+const fs = window.require('fs')
+const archiver = window.require('archiver');
+const path = window.require('path');
 
 
-class cipherEncryption {
+export default class cipherEncryption {
 
     constructor() {
         this.password = null;
@@ -56,8 +56,8 @@ class cipherEncryption {
 
     //Function To zip the Files 
     zipFiles() {
-
-        var output = fs.createWriteStream(__dirname + '/zipDir/file.zip');
+        console.time("zipin")
+        var output = fs.createWriteStream('zipDir/file.zip');
 
         this.archive.pipe(output);
 
@@ -78,26 +78,36 @@ class cipherEncryption {
             }
             
         })
-
+        output.on('close',()=>{
+            console.timeEnd("zipin");
+            this.encryptFiles();
+        });
         this.archive.finalize();
+        
+        
     }
 
     
 
     encryptFiles() {
-
+        console.time("encrypt");
+        console.log("started-encryption");
         this.iv = crypto.randomBytes(16);
         this.salt = this.password;
         this.hash = crypto.createHash("sha256");
 
         this.hash.update(this.salt);
 
-// `hash.digest()` returns a Buffer by default when no encoding is given
+        // `hash.digest()` returns a Buffer by default when no encoding is given
         this.key = this.hash.digest().slice(0, 32);
 
         const cipher = crypto.createCipheriv(this.algorithm, this.key, this.iv);
         this.input = fs.createReadStream('zipDir/file.zip'); //Zipped Files get Encrypted
         this.output = fs.createWriteStream('file.enc');  //Create Encryped Zip Files
+        this.output.on("close",()=>{
+            console.timeEnd("encrypt")
+
+        });
         this.input.pipe(cipher).pipe(this.output);
 
     }
@@ -117,22 +127,22 @@ class cipherEncryption {
     }
 }
 
-const stream = new cipherEncryption();
+// const stream = new cipherEncryption();
 
 
-// sets file paths using the method.
-stream.setFiles([
-    "file2.txt",
-    "file3.txt",
-    "./subdir"
-]);
-stream.setPassword('paulprince');
-stream.setAlgorithm('aes-256-cbc');
+// // sets file paths using the method.
+// stream.setFiles([
+//     "file2.txt",
+//     "file3.txt",
+//     "./subdir"
+// ]);
+// stream.setPassword('paulprince');
+// stream.setAlgorithm('aes-256-cbc');
 
-stream.checkFolder();
-stream.zipFiles();
-stream.encryptFiles();
-//stream.decryptFiles();
+// stream.checkFolder();
+// stream.zipFiles();
+// stream.encryptFiles();
+// //stream.decryptFiles();
 
 
 

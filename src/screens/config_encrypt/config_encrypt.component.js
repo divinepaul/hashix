@@ -11,16 +11,17 @@ import { Card, CardContent, CardActions } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
 import { TiDelete } from "react-icons/ti";
 import MenuItem from '@material-ui/core/MenuItem';
+import cipherEncryption from '../../services/fileencrypt.services'
 
 const { dialog } = window.require('electron').remote;
-const crypto = window.require("crypto");
 export class ConfigEncrypt extends Component {
 
     constructor(props) {
         super(props)
 
         this.state = {
-            algorithm: 'aes-256-cbc',
+            algorithm:"aes-256-cbc",
+            algorithms: ['aes-256-cbc'],
             files: [],
             password:''
         }
@@ -53,7 +54,15 @@ export class ConfigEncrypt extends Component {
             })
         }else{
 
-            // TODO: actually encrypt files.
+            const stream = new cipherEncryption();
+            stream.setFiles(this.state.files);
+            stream.setAlgorithm(this.state.algorithm);
+            stream.setPassword(this.state.password);
+            stream.checkFolder();
+            stream.zipFiles();
+            // stream.encryptFiles();
+
+
         }
 
         
@@ -105,6 +114,7 @@ export class ConfigEncrypt extends Component {
 
             });
         }
+        
 
     }
 
@@ -192,13 +202,13 @@ export class ConfigEncrypt extends Component {
                                     id="outlined-select-currency"
                                     select
                                     label="Encryption Algorithm"
-                                    value={this.state.algorithm}
+                                    value={this.state.algorithms[0]}
                                     defaultValue="aes-256-cbc"
                                     helperText="Please select your algorithm"
                                     variant="outlined"
                                     onChange={this.handleAlgorithmChange}
                                 >
-                                    {crypto.getCiphers().map((option, i) => (
+                                    {this.state.algorithms.map((option, i) => (
                                         <MenuItem key={i} value={option}>
                                             {option}
                                         </MenuItem>
