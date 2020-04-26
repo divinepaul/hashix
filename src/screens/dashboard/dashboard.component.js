@@ -29,13 +29,14 @@ export class DashBoard extends Component {
 
                     </Card>
                     </Link>
-
+                    <Link to="/configdecrypt">
                     <Card className="card-button">
 
                         <FaUnlock className="card-button-icon" />
                         <h1>Decrypt</h1>
 
                     </Card>
+                    </Link>
 
                 </div>
             </div>

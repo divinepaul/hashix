@@ -1,0 +1,19 @@
+
+h2{
+    color:white;
+}
+.config-encrypt{
+    margin-top:24px;
+}
+.config-encrypt-content{
+    padding:5%;
+}
+.files-container{
+    border-radius: 5px;
+    box-shadow: 0px 3px 5px rgba(0,0,0,0.3);
+    display: flex;
+    padding:2px;
+    padding-left:10px;
+    align-items: center;
+    justify-content: space-between;
+}

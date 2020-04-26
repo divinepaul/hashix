@@ -55,8 +55,8 @@ export default class cipherEncryption {
     }
 
     //Function To zip the Files 
-    zipFiles() {
-        console.time("zipin")
+    zipFiles(savePath) {
+
         var output = fs.createWriteStream('zipDir/file.zip');
 
         this.archive.pipe(output);
@@ -78,19 +78,20 @@ export default class cipherEncryption {
             }
             
         })
-        output.on('close',()=>{
-            console.timeEnd("zipin");
-            this.encryptFiles();
-        });
+        // output.on('close',()=>{
+        //     console.timeEnd("zipin");
+        //     this.encryptFiles(savePath);
+        // });
+
         this.archive.finalize();
         
+        return output;
         
     }
 
     
 
-    encryptFiles() {
-        console.time("encrypt");
+    encryptFiles(savePath) {
         console.log("started-encryption");
         this.iv = crypto.randomBytes(16);
         this.salt = this.password;
@@ -103,13 +104,14 @@ export default class cipherEncryption {
 
         const cipher = crypto.createCipheriv(this.algorithm, this.key, this.iv);
         this.input = fs.createReadStream('zipDir/file.zip'); //Zipped Files get Encrypted
-        this.output = fs.createWriteStream('file.enc');  //Create Encryped Zip Files
-        this.output.on("close",()=>{
-            console.timeEnd("encrypt")
+        this.output = fs.createWriteStream(savePath);  //Create Encryped Zip Files
+        // this.output.on("close",()=>{
+        //     console.timeEnd("encrypt")
+        //     this.rmZip();
 
-        });
+        // });
         this.input.pipe(cipher).pipe(this.output);
-
+        return this.output;
     }
 
     //Remove the zip file after encryption

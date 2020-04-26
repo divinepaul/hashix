@@ -10,6 +10,7 @@ import {
 
 import { DashBoard } from './screens/dashboard/dashboard.component';
 import { ConfigEncrypt } from './screens/config_encrypt/config_encrypt.component';
+import { ConfigDecrypt } from "./screens/config_decrypt/config_decrypt.component"
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 
 const darkTheme = createMuiTheme({
@@ -34,6 +35,7 @@ class App extends Component {
 
             <Route path="/configencrypt" component={ConfigEncrypt} />
 
+            <Route path="/configdecrypt" component={ConfigDecrypt} />
 
           </Switch>
         </Router>

@@ -3,7 +3,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import { FaArrowLeft } from "react-icons/fa";
-
+import LinearProgress from '@material-ui/core/LinearProgress';
 import "./config_encrypt.component.css"
 
 import Button from '@material-ui/core/Button';
@@ -20,52 +20,78 @@ export class ConfigEncrypt extends Component {
         super(props)
 
         this.state = {
-            algorithm:"aes-256-cbc",
+            algorithm: "aes-256-cbc",
             algorithms: ['aes-256-cbc'],
             files: [],
-            password:''
+            password: '',
+            encryptionProgress: false
         }
 
 
     }
 
-    handlePasswordChange =(event)=>{
-        this.setState({password:event.target.value},()=>{
+    handlePasswordChange = (event) => {
+        this.setState({ password: event.target.value }, () => {
             console.log(this.state.password);
         });
-        
+
     }
-    handleAlgorithmChange=(event)=>{
-        this.setState({algorithm:event.target.value},()=>{
+    handleAlgorithmChange = (event) => {
+        this.setState({ algorithm: event.target.value }, () => {
             console.log(this.state.algorithm);
         });
     }
 
 
-    handleFormSubmit=(event)=>{
+    handleFormSubmit = (event) => {
         event.preventDefault();
-        if(!this.state.files.length){
+        if (!this.state.files.length) {
             dialog.showMessageBoxSync({
-                type:"info",
-                title:"No Files Selected",
-                message:"No Files Selected"
-            },(response)=>{
-                
+                type: "info",
+                title: "No Files Selected",
+                message: "No Files Selected"
+            }, (response) => {
+
             })
-        }else{
+        } else {
 
             const stream = new cipherEncryption();
             stream.setFiles(this.state.files);
             stream.setAlgorithm(this.state.algorithm);
             stream.setPassword(this.state.password);
             stream.checkFolder();
-            stream.zipFiles();
-            // stream.encryptFiles();
 
+
+
+            let savePath = dialog.showSaveDialogSync({
+                filters: [{
+                    name: 'Hashix Encrypted file',
+                    extensions: ['enc']
+                }],
+                title: "Select a folder to save the encrypted file",
+
+            })
+            console.log(savePath);
+
+            this.setState({ encryptionProgress: true })
+
+            let zipstr = stream.zipFiles(savePath);
+            zipstr.on('close', () => {
+                console.timeEnd("zipin");
+                let encstr = stream.encryptFiles(savePath);
+                encstr.on("close", () => {
+
+                     stream.rmZip();
+                     this.setState({ encryptionProgress: false })
+
+                });
+            });
+            
+            // stream.encryptFiles();
 
         }
 
-        
+
     }
 
     openFiles = () => {
@@ -114,7 +140,7 @@ export class ConfigEncrypt extends Component {
 
             });
         }
-        
+
 
     }
 
@@ -126,6 +152,7 @@ export class ConfigEncrypt extends Component {
 
     openFolders = () => {
         let files = dialog.showOpenDialogSync({
+
             properties: ["openDirectory", "multiSelections"]
 
         });
@@ -151,6 +178,7 @@ export class ConfigEncrypt extends Component {
                         <h2>Encrypt</h2>
                     </Toolbar>
                 </AppBar>
+                {this.state.encryptionProgress ? <LinearProgress /> : null}
 
                 <div className="config-encrypt-content">
                     <Card>
@@ -192,12 +220,12 @@ export class ConfigEncrypt extends Component {
                             <br />
                             <form autoComplete="off" onSubmit={this.handleFormSubmit}>
 
-                                <TextField id="outlined-basic" label="Password" variant="outlined" color="secondary" onChange={this.handlePasswordChange} type="password" required value={this.state.password}/>
+                                <TextField id="outlined-basic" label="Password" variant="outlined" color="secondary" onChange={this.handlePasswordChange} type="password" required value={this.state.password} />
 
                                 <br />
                                 <br />
                                 <TextField
-                                
+
                                     color="secondary"
                                     id="outlined-select-currency"
                                     select
