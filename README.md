@@ -3,8 +3,6 @@ A simple GUI based encryption and decryption software made with electronjs and R
 
 ## Encryption modules contributed by [@paulprince24542](https://github.com/paulprince24542) 
 
----
-<br>
 
 ## Screenshots
 
