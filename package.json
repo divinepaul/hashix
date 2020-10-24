@@ -2,6 +2,7 @@
   "name": "hashix",
   "description": "encryption",
   "private": true,
+  "version": "1.0.0",
   "dependencies": {
     "@material-ui/core": "^4.9.7",
     "archiver": "^3.1.1",
@@ -24,8 +25,15 @@
     "wait-on": "4.0.1"
   },
   "build": {
+    "productName": "Hashix",
     "publish": {
       "provider": "github"
+    },
+    "linux": {
+      "icon": "./public/favicon.png"
+    },
+    "win": {
+      "icon": "./public/favicon.png"
     }
   },
   "main": "public/electron.js",

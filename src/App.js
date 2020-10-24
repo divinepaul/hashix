@@ -3,7 +3,7 @@ import './App.css';
 import { Frame } from './components/frame/frame.component';
 
 import {
-  BrowserRouter as Router,
+  HashRouter as Router,
   Switch,
   Route,
 } from "react-router-dom";
