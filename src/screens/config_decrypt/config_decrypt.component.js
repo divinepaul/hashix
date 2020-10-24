@@ -11,6 +11,7 @@ import { Card, CardContent, CardActions } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
 import { TiDelete } from "react-icons/ti";
 import MenuItem from '@material-ui/core/MenuItem';
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 import cipherEncryption from '../../services/fileencrypt.services'
 
@@ -24,7 +25,9 @@ export class ConfigDecrypt extends Component {
             algorithm: "aes-256-cbc",
             algorithms: ['aes-256-cbc'],
             file: "",
-            password: ''
+            password: '',
+            encryptionProgress: false
+
         }
 
 
@@ -65,9 +68,63 @@ export class ConfigDecrypt extends Component {
         });
     }
 
-    handleFormSubmit = (event) =>{
+    handleFormSubmit = (event) => {
         event.preventDefault();
-        
+        if (this.state.file) {
+            let savePath = dialog.showOpenDialogSync({
+                title: "Select a folder to save the decrypted files",
+                properties: ["openDirectory"]
+            });
+            if(!savePath){
+                dialog.showMessageBoxSync({
+                    type: "info",
+                    title: "Please Select a Folder to Save the file",
+                    message: "We cannot extract the encrypted files without you specifiying the directory to save"
+                });
+                return;
+            }
+            console.log(savePath);
+            const stream = new cipherEncryption();
+            stream.setFiles(this.state.file);
+            stream.setAlgorithm(this.state.algorithm);
+            stream.setPassword(this.state.password);
+
+            let { cipherStream, outputStream } = stream.decryptFiles();
+
+            this.setState({ encryptionProgress: true });
+            cipherStream.on("error", () => {
+                dialog.showMessageBoxSync({
+                    type: "error",
+                    title: "Decryption Failed",
+                    message: "Wrong Password or Corrupted File"
+                });
+                this.setState({ encryptionProgress: false });
+            });
+            outputStream.on("close", () => {
+                let unZipStream = stream.unZipFiles(savePath[0]);
+                unZipStream.on("close", () => {
+                    this.setState({ encryptionProgress: false });
+                    stream.rmZip();
+                });
+                unZipStream.on("error", () => {
+                    dialog.showMessageBoxSync({
+                        type: "error",
+                        title: "Decryption Failed",
+                        message: "Wrong Password or Corrupted File"
+                    });
+                })
+            });
+
+        } else {
+
+            dialog.showMessageBoxSync({
+                type: "info",
+                title: "No File Selected",
+                message: "No File Selected"
+            });
+
+        }
+
     }
 
     render() {
@@ -82,21 +139,21 @@ export class ConfigDecrypt extends Component {
                         <h2>Decrypt</h2>
                     </Toolbar>
                 </AppBar>
-
+                {this.state.encryptionProgress ? <LinearProgress /> : null}
                 <div className="config-encrypt-content">
                     <Card>
                         <CardContent>
 
                             <h1>Selected file</h1>
 
-                            { this.state.file ? 
+                            {this.state.file ?
                                 <div className="files-container">
                                     <p>{this.state.file}</p>
                                     <IconButton edge="start" color="inherit" aria-label="menu" onClick={() => this.setState({ file: "" })}>
                                         <TiDelete color="white" size="20px" />
                                     </IconButton>
                                 </div> : null
-                            } 
+                            }
 
 
 

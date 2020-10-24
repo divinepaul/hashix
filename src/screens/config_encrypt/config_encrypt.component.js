@@ -77,6 +77,7 @@ export class ConfigEncrypt extends Component {
 
             let zipstr = stream.zipFiles(savePath);
             zipstr.on('close', () => {
+                console.log("he   y")
                 console.timeEnd("zipin");
                 let encstr = stream.encryptFiles(savePath);
                 encstr.on("close", () => {

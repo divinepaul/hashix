@@ -2,7 +2,7 @@ const crypto = window.require('crypto');
 const fs = window.require('fs')
 const archiver = window.require('archiver');
 const path = window.require('path');
-
+const unzipper = window.require('unzipper');
 
 export default class cipherEncryption {
 
@@ -68,48 +68,37 @@ export default class cipherEncryption {
             // checks if the path is a file
             if (stats.isFile()) {
                 // if it's a file append it to the archive
-                this.archive.append(fs.createReadStream(file),{name:path.basename(file)});
+                this.archive.append(fs.createReadStream(file), { name: path.basename(file) });
 
             }
             // checks if the path is a directory
-            if(stats.isDirectory()){
+            if (stats.isDirectory()) {
                 // add the folder to the archive
-                this.archive.directory(file,path.basename(file));
+                this.archive.directory(file, path.basename(file));
             }
-            
+
         })
-        // output.on('close',()=>{
-        //     console.timeEnd("zipin");
-        //     this.encryptFiles(savePath);
-        // });
 
         this.archive.finalize();
-        
+
         return output;
-        
+
     }
 
-    
+    unZipFiles(savePath){
+        let input = fs.createReadStream('zipDir/file.zip');
+        let output = input.pipe(unzipper.Extract({ path: savePath }));
+        return output;
+    }
+
+
 
     encryptFiles(savePath) {
-        console.log("started-encryption");
-        this.iv = crypto.randomBytes(16);
-        this.salt = this.password;
-        this.hash = crypto.createHash("sha256");
 
-        this.hash.update(this.salt);
-
-        // `hash.digest()` returns a Buffer by default when no encoding is given
-        this.key = this.hash.digest().slice(0, 32);
-
-        const cipher = crypto.createCipheriv(this.algorithm, this.key, this.iv);
-        this.input = fs.createReadStream('zipDir/file.zip'); //Zipped Files get Encrypted
-        this.output = fs.createWriteStream(savePath);  //Create Encryped Zip Files
-        // this.output.on("close",()=>{
-        //     console.timeEnd("encrypt")
-        //     this.rmZip();
-
-        // });
+        let key = this.password
+        var cipher = crypto.createCipher('aes-256-cbc', key);
+        this.input = fs.createReadStream('zipDir/file.zip');
+        this.output = fs.createWriteStream(savePath);
         this.input.pipe(cipher).pipe(this.output);
         return this.output;
     }
@@ -121,32 +110,14 @@ export default class cipherEncryption {
 
     decryptFiles() {
 
-        const decipher = crypto.createDecipheriv(this.algorithm, this.key, this.iv)
-        this.input = fs.createReadStream('file.enc');
-        this.output = fs.createWriteStream('decrypt.txt');
-        this.input.pipe(decipher).pipe(this.output);
+        let key = this.password
+        var cipher = crypto.createDecipher('aes-256-cbc', key);
+        this.input = fs.createReadStream(this.files);
+        this.output = fs.createWriteStream('zipDir/file.zip');
+        this.input.pipe(cipher).pipe(this.output);
+        return {inputStream: this.input,cipherStream: cipher,outputStream: this.output}
+
 
     }
 }
-
-// const stream = new cipherEncryption();
-
-
-// // sets file paths using the method.
-// stream.setFiles([
-//     "file2.txt",
-//     "file3.txt",
-//     "./subdir"
-// ]);
-// stream.setPassword('paulprince');
-// stream.setAlgorithm('aes-256-cbc');
-
-// stream.checkFolder();
-// stream.zipFiles();
-// stream.encryptFiles();
-// //stream.decryptFiles();
-
-
-
-
 
